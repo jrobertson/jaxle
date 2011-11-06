@@ -2,14 +2,7 @@
 
 // requires jfr.js
 
-
-function Jaxle(url) {
-
-  //read the file from the url
-  xml = loadXMLDoc(url); 
-  this.root = xml;
-
-}
+Jaxle = {new: loadXMLDoc};
 
 function loadXMLDoc(url) {
 
@@ -25,7 +18,7 @@ function loadXMLDoc(url) {
 
 function xpath(path){
 
-  var a = new rb.Array;
+  var a = rb.Array.new();
 
   // code for IE
   if (window.ActiveXObject) {
@@ -48,13 +41,29 @@ function xpath(path){
   return a;
 }
 
-function element(path){return this.xpath(path).get(1);}
-function text(){return this.firstChild.nodeValue;}
-function attribute(attr){return new rb.String(this.getAttribute(attr));}
+function element(path){
+  a = this.xpath(path);
+  return (a.length() > 0) ? a.first() : nil;
+}
+function text(){
+  return rb.String.new(this.firstChild ? this.firstChild.nodeValue : '');
+}
+function attribute(attr){
+  var r = this.getAttribute(attr)
+  return r ? rb.String.new(r) : nil;
+}
 function clone(){return this.cloneNode(false);}
 function deep_clone(){return this.cloneNode(true);}
-function elements(){return new rb.Array(this.childNodes); }
-function name(){return new rb.String(this.nodeName); }
+function elements(){return rb.Array.new(this.childNodes).select(function(x){
+  return x.nodeType == 1; }); 
+}
+function name(){return rb.String.new(this.nodeName); }
+function deleteElement(xpath){
+  (typeof xpath == 'undefined') ? this.parentNode.removeChild(this) :
+    this.element(xpath).delete();      
+}
+function append_child(child){ return this.appendChild(child); }
+function parent(){ return this.parentNode; }
 
 Document.prototype.xpath = xpath;
 Element.prototype.xpath = xpath;
@@ -72,3 +81,7 @@ Document.prototype.elements =  elements;
 Element.prototype.elements =  elements; 
 Document.prototype.name = name;
 Element.prototype.name = name;
+Element.prototype.delete = deleteElement;
+Document.prototype.append = append_child;
+Element.prototype.append = append_child;
+Element.prototype.parent = parent;
