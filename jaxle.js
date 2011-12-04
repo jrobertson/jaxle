@@ -48,10 +48,17 @@ function element(path){
 function text(){
   return rb.String.new(this.firstChild ? this.firstChild.nodeValue : '');
 }
+
 function attribute(attr){
-  var r = this.getAttribute(attr)
+  var r = this.getAttribute(attr);
   return r ? rb.String.new(r) : nil;
 }
+
+function set_attribute(attr, val){
+  this.setAttribute(attr, val);
+  return rb.String.new(val);
+}
+
 function clone(){return this.cloneNode(false);}
 function deep_clone(){return this.cloneNode(true);}
 function elements(){return rb.Array.new(this.childNodes).select(function(x){
@@ -73,6 +80,8 @@ Document.prototype.text = text;
 Element.prototype.text = text;
 Document.prototype.attribute = attribute;
 Element.prototype.attribute = attribute;
+Document.prototype.set_attribute = set_attribute;
+Element.prototype.set_attribute = set_attribute;
 Document.prototype.clone = clone;
 Element.prototype.clone = clone;
 Document.prototype.deep_clone = deep_clone;
