@@ -59,6 +59,10 @@ function set_attribute(attr, val){
   return rb.String.new(val);
 }
 
+function set_class(val){
+  this.set_attribute('class', val);
+}
+
 function clone(){return this.cloneNode(false);}
 function deep_clone(){return this.cloneNode(true);}
 function elements(){return rb.Array.new(this.childNodes).select(function(x){
@@ -82,6 +86,8 @@ Document.prototype.attribute = attribute;
 Element.prototype.attribute = attribute;
 Document.prototype.set_attribute = set_attribute;
 Element.prototype.set_attribute = set_attribute;
+Document.prototype.set_class = set_class;
+Element.prototype.set_class = set_class;
 Document.prototype.clone = clone;
 Element.prototype.clone = clone;
 Document.prototype.deep_clone = deep_clone;
